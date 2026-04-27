@@ -1,0 +1,21 @@
+info:
+  name: sem
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: http://localhost:3000/questions
+  headers:
+    - name: Authorization
+      value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc3NzMyNDAyNCwiZXhwIjoxNzc3MzI3NjI0fQ.c_IsUYqtBEq70XD9oqlbsxbm25RVbC-FquBqruNK4n4
+  body:
+    type: json
+    data: ""
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

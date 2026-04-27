@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const prisma = require("../lib/prisma");
+const authenticate = require("../middleware/auth");
+const isOwner = require("../middleware/isOwner");
+
+router.use(authenticate);
 
 // GET kaikki kysymykset
 router.get("/", async (req, res) => {
@@ -34,6 +38,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+
 // POST uusi kysymys
 router.post("/", async (req, res) => {
   try {
@@ -46,17 +51,22 @@ router.post("/", async (req, res) => {
     }
 
     const newQuestion = await prisma.question.create({
-      data: { question, answer },
+      data: {
+        question,
+        answer,
+        userId: 1,
+      },
     });
 
     res.status(201).json(newQuestion);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 });
 
 // PUT päivitä kysymys
-router.put("/:id", async (req, res) => {
+router.put("/:id", isOwner, async (req, res) => {
   try {
     const id = Number(req.params.id);
     const { question, answer } = req.body;
@@ -81,7 +91,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE kysymys
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", isOwner, async (req, res) => {
   try {
     const id = Number(req.params.id);
 

@@ -3,12 +3,13 @@ const app = express();
 
 const prisma = require("./lib/prisma");
 const questionRoutes = require("./routes/questions");
+const authRouter = require("./routes/auth");
 
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// routes
+app.use("/api/auth", authRouter);
 app.use("/questions", questionRoutes);
 
 // 404 handler
@@ -22,12 +23,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal server error" });
 });
 
-// start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
-// graceful shutdown
 process.on("SIGINT", async () => {
   await prisma.$disconnect();
   process.exit(0);
